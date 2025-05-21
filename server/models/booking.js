@@ -4,27 +4,35 @@ const bookingSchema = new mongoose.Schema({
   vehicleNumber: {
     type: String,
     required: true,
-    match: /^[A-Za-z0-9]{6,}$/,
+    match: /^[A-Za-z0-9]{6,}$/
   },
   ownerName: {
     type: String,
     required: true,
-    minlength: 3,
-    match: /^[A-Za-z ]+$/,
+    match: /^[A-Za-z ]+$/
   },
   slotNumber: {
-    type: Number,
-    required: true,
-    min: 1
+    type: String,
+    required: true
   },
-  bookingTime: {
+  startTime: {
     type: Date,
     required: true,
     validate: {
-      validator: function(value) {
-        return value > new Date(); // Must be a future time
+      validator: function (value) {
+        return value > new Date();
       },
-      message: 'Booking time must be in the future.'
+      message: 'Start time must be in the future.'
+    }
+  },
+  endTime: {
+    type: Date,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return this.startTime && value > this.startTime;
+      },
+      message: 'End time must be after start time.'
     }
   }
 });
